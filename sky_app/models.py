@@ -10,6 +10,7 @@ class StudentInfo(models.Model):
     section = models.CharField(max_length=20, null=True, blank=True)
     created_at = models.DateTimeField(default=datetime.now())
     updated_at = models.DateTimeField(null=True)
+    fees = models.DecimalField(max_digits=10, decimal_places=4, null=True, blank=True)
 
     class Meta:
         db_table = 'student_info'

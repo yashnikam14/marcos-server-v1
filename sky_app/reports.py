@@ -14,10 +14,10 @@ class CustomerCls:
             f_name = data.get('f_name')
             email = data.get('email')
             section = data.get('section')
-
-            query = """insert into student_info (`name`,get_class,mobile,f_name,email,section,created_at) 
+            fees = data.get('fees')
+            query = """insert into student_info (`name`,get_class,mobile,f_name,email,section,created_at,fees) 
                      values ('{}', '{}', '{}', 
-                     '{}', '{}', '{}', '{}')""".format(name, get_class, mobile, f_name, email, section, datetime.now().strftime("%Y-%m-%d %H-%M-%S"))
+                     '{}', '{}', '{}', '{}', {})""".format(name, get_class, mobile, f_name, email, section, datetime.now().strftime("%Y-%m-%d %H-%M-%S"), fees)
 
             cur.execute(query)
 
@@ -33,13 +33,13 @@ class CustomerCls:
                 cur.close()
 
     @staticmethod
-    def update_customer(name, get_class, f_name, section, data):
+    def update_customer(name, get_class, f_name, section, data, fees):
         cur = connection.cursor()
         try:
 
             query = """UPDATE student_info SET 
-            `name`= '{}', get_class='{}', f_name='{}',section='{}', updated_at='{}' 
-            WHERE mobile='{}';""".format(name, get_class, f_name, section, datetime.now().strftime("%Y-%m-%d %H-%M-%S"), data.mobile)
+            `name`= '{}', get_class='{}', f_name='{}',section='{}', updated_at='{}', fees={} 
+            WHERE mobile='{}';""".format(name, get_class, f_name, section, datetime.now().strftime("%Y-%m-%d %H-%M-%S"), fees, data.mobile)
 
             cur.execute(query)
 
@@ -55,12 +55,12 @@ class CustomerCls:
                 cur.close()
 
     @staticmethod
-    def get_customer_list():
+    def get_customer_list(mobile):
         cur = connection.cursor()
         try:
             query = """SELECT `name` AS `name`, get_class AS class, mobile AS mobile, 
-                    f_name AS f_name, email AS email, section AS section 
-                    FROM student_info;"""
+                    f_name AS f_name, email AS email, section AS section, fees AS fees 
+                    FROM student_info {};""".format('WHERE mobile={}'.format(mobile) if len(mobile) > 0 else '')
 
             cur.execute(query)
             customer_lst = cur.fetchall()
