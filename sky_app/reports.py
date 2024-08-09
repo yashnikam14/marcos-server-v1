@@ -76,3 +76,45 @@ class CustomerCls:
             if cur is not None:
                 cur.close()
 
+class UserCls:
+    @staticmethod
+    def add_user(password, username, first_name, last_name, email):
+        cur = connection.cursor()
+        try:
+
+            query = """INSERT INTO `auth_user` (`password`, username, first_name, last_name, email, date_joined)
+VALUES ('{}', '{}', '{}', '{}', '{}', '{}');""".format(password, username, first_name, last_name, email, datetime.now().strftime("%Y-%m-%d %H-%M-%S"))
+
+            cur.execute(query)
+
+        except Exception as e:
+            print("Exception:- {}".format(str(e)))
+            return Response({
+                'message': 'Something went wrong.',
+                'response_object': []
+            }, status=st.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        finally:
+            if cur is not None:
+                cur.close()
+
+    @staticmethod
+    def add_user_info(mobile, user_id, address):
+        cur = connection.cursor()
+        try:
+
+            query = """INSERT INTO `user_info` (mobile, user_id, address)
+VALUES ('{}',{},'{}');""".format(mobile, user_id, address)
+
+            cur.execute(query)
+
+        except Exception as e:
+            print("Exception:- {}".format(str(e)))
+            return Response({
+                'message': 'Something went wrong.',
+                'response_object': []
+            }, status=st.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        finally:
+            if cur is not None:
+                cur.close()

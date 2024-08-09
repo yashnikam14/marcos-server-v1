@@ -19,3 +19,13 @@ class StudentInfo(models.Model):
 
     def __str__(self):
         return self.name or 'No Name'
+
+
+class UserInfo(models.Model):
+    id = models.IntegerField(primary_key=True)
+    mobile = models.CharField(max_length=20, null=False, blank=False)
+    user_id = models.IntegerField(null=False, blank=False)
+    address = models.CharField(max_length=300, null=True, blank=True)
+
+    class Meta:
+        db_table = 'user_info'

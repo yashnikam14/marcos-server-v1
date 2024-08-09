@@ -22,16 +22,7 @@ class AddCustomerAPI(viewsets.ViewSet):
             status_code = st.HTTP_200_OK
             message = 'Customer updated successfully.'
             if is_update:
-                log_entries = []
                 student_details = StudentInfo.objects.get(Q(email=email) | Q(mobile=mobile))
-                # log_entries.append({
-                #     'table_name': 'student_info',
-                #     'column_name': 'name',
-                #     'old_value': student_details.name,
-                #     'new_value': name,
-                #     'reference_id': student_details.id
-                # })
-                # student_details.name = name
                 CustomerCls.update_customer(name, get_class, f_name, section, student_details, fees)
 
             else:
