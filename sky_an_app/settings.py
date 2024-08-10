@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 from .env_settings.sky_env import database_settings
 from pathlib import Path
-
+import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -88,12 +88,12 @@ DATABASES = {
     # }
 
     'default': {
-        'ENGINE': database_settings.get('ENGINE'),
-        'NAME': database_settings.get('NAME'),
-        'USER': database_settings.get('USER'),
-        'PASSWORD': database_settings.get('PASSWORD'),
-        'HOST': database_settings.get('HOST'),
-        'PORT': database_settings.get('PORT'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT', '3306'),
     }
 }
 

@@ -1,5 +1,6 @@
 from django.db import models
-from datetime import datetime
+from django.utils import timezone
+
 class StudentInfo(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255, null=True, blank=True)
@@ -8,7 +9,7 @@ class StudentInfo(models.Model):
     f_name = models.CharField(max_length=255, null=True, blank=True)
     email = models.CharField(max_length=255, null=True, blank=True)
     section = models.CharField(max_length=20, null=True, blank=True)
-    created_at = models.DateTimeField(default=datetime.now())
+    created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(null=True)
     fees = models.DecimalField(max_digits=10, decimal_places=4, null=True, blank=True)
 
