@@ -19,5 +19,5 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/sky-app/', include('sky_app.urls')),
+    path('v1/api/sky-app/', include('sky_app.urls')),
 ]
