@@ -1,12 +1,11 @@
-from django.db import connection
 from rest_framework import status as st
 from rest_framework.response import Response
 from datetime import datetime
+from sky_an_app.query_handler import execute_query, insert_query
 
 class CustomerCls:
     @staticmethod
     def add_customer(data):
-        cur = connection.cursor()
         try:
             name = data.get('name')
             get_class = data.get('get_class')
@@ -19,7 +18,7 @@ class CustomerCls:
                      values ('{}', '{}', '{}', 
                      '{}', '{}', '{}', '{}', {})""".format(name, get_class, mobile, f_name, email, section, datetime.now().strftime("%Y-%m-%d %H-%M-%S"), fees)
 
-            cur.execute(query)
+            insert_query(query)
 
         except Exception as e:
             print("Exception:- {}".format(str(e)))
@@ -28,20 +27,16 @@ class CustomerCls:
                 'response_object': []
             }, status=st.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        finally:
-            if cur is not None:
-                cur.close()
 
     @staticmethod
     def update_customer(name, get_class, f_name, section, data, fees):
-        cur = connection.cursor()
         try:
 
             query = """UPDATE student_info SET 
             `name`= '{}', get_class='{}', f_name='{}',section='{}', updated_at='{}', fees={} 
             WHERE mobile='{}';""".format(name, get_class, f_name, section, datetime.now().strftime("%Y-%m-%d %H-%M-%S"), fees, data.mobile)
 
-            cur.execute(query)
+            insert_query(query)
 
         except Exception as e:
             print("Exception:- {}".format(str(e)))
@@ -50,42 +45,28 @@ class CustomerCls:
                 'response_object': []
             }, status=st.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        finally:
-            if cur is not None:
-                cur.close()
-
     @staticmethod
     def get_customer_list(name):
-        cur = connection.cursor()
         try:
             query = """SELECT `name` AS `name`, get_class AS class, mobile AS mobile, 
                     f_name AS f_name, email AS email, section AS section, fees AS fees 
                     FROM student_info {};""".format('WHERE `name` LIKE "%{}%"'.format(name) if len(name) > 0 else '')
 
-            cur.execute(query)
-            customer_lst = cur.fetchall()
-            columns = [col[0] for col in cur.description]
-            result = [dict(zip(columns, row)) for row in customer_lst]
-            return result
+            return execute_query(query)
 
         except Exception as e:
             print("Exception:- {}".format(str(e)))
             result = []
 
-        finally:
-            if cur is not None:
-                cur.close()
-
 class UserCls:
     @staticmethod
     def add_user(password, username, first_name, last_name, email):
-        cur = connection.cursor()
         try:
 
             query = """INSERT INTO `auth_user` (`password`, username, first_name, last_name, email, date_joined)
 VALUES ('{}', '{}', '{}', '{}', '{}', '{}');""".format(password, username, first_name, last_name, email, datetime.now().strftime("%Y-%m-%d %H-%M-%S"))
 
-            cur.execute(query)
+            insert_query(query)
 
         except Exception as e:
             print("Exception:- {}".format(str(e)))
@@ -94,19 +75,14 @@ VALUES ('{}', '{}', '{}', '{}', '{}', '{}');""".format(password, username, first
                 'response_object': []
             }, status=st.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        finally:
-            if cur is not None:
-                cur.close()
-
     @staticmethod
     def add_user_info(mobile, user_id, address):
-        cur = connection.cursor()
         try:
 
             query = """INSERT INTO `user_info` (mobile, user_id, address)
 VALUES ('{}',{},'{}');""".format(mobile, user_id, address)
 
-            cur.execute(query)
+            insert_query(query)
 
         except Exception as e:
             print("Exception:- {}".format(str(e)))
@@ -114,7 +90,3 @@ VALUES ('{}',{},'{}');""".format(mobile, user_id, address)
                 'message': 'Something went wrong.',
                 'response_object': []
             }, status=st.HTTP_500_INTERNAL_SERVER_ERROR)
-
-        finally:
-            if cur is not None:
-                cur.close()
