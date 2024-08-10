@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-
+from .env_settings.sky_env import database_settings
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -78,13 +78,22 @@ WSGI_APPLICATION = 'sky_an_app.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'sky_db',
+    #     'USER': 'root',
+    #     'PASSWORD': 'yash',
+    #     'HOST': 'localhost',
+    #     'PORT': '3306',
+    # }
+
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'sky_db',
-        'USER': 'root',
-        'PASSWORD': 'yash',
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'ENGINE': database_settings.get('ENGINE'),
+        'NAME': database_settings.get('NAME'),
+        'USER': database_settings.get('USER'),
+        'PASSWORD': database_settings.get('PASSWORD'),
+        'HOST': database_settings.get('HOST'),
+        'PORT': database_settings.get('PORT'),
     }
 }
 
