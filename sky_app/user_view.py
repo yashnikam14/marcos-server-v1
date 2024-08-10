@@ -6,7 +6,6 @@ from cryptography.fernet import Fernet
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
 from .reports import UserCls
-from .models import UserInfo
 
 class CreateUserView(viewsets.ViewSet):
     def create(self, request, *args, **kwargs):
@@ -31,11 +30,13 @@ class CreateUserView(viewsets.ViewSet):
                 CreateUserView.create_user_token(email)
 
                 return Response({
+                    'status': 'success',
                     'message': 'User created successfully.',
                     'response_object': []
                 }, status=st.HTTP_400_BAD_REQUEST)
             else:
                 return Response({
+                    'status': 'fail',
                     'message': 'User already exist.',
                     'response_object': []
                 }, status=st.HTTP_400_BAD_REQUEST)
@@ -43,21 +44,27 @@ class CreateUserView(viewsets.ViewSet):
         except Exception as e:
             print("Exception:- {}".format(str(e)))
             return Response({
+                'status': 'fail',
                 'message': 'Something went wrong',
                 'response_object': []
             }, status=st.HTTP_500_INTERNAL_SERVER_ERROR)
 
     @staticmethod
-    def create_encrypt_password(password):
+    def create_encrypt_password(password, is_update=False):
         try:
-            key = Fernet.generate_key()
+            # key = Fernet.generate_key()
+            key = b'ewvd1sGLZlF4Y5bdmQ3qZLPuD5ZNj1nZdFsUpMFm90c='
             fernet = Fernet(key)
             encrypted_password = fernet.encrypt(password.encode()).decode('utf-8')
-
-            return encrypted_password
+            if is_update:
+                decrypted_pass = fernet.decrypt(password).decode('utf-8')
+                return decrypted_pass
+            else:
+                return encrypted_password
         except Exception as e:
             print("Exception:- {}".format(str(e)))
             return Response({
+                'status': 'fail',
                 'message': 'Something went wrong',
                 'response_object': []
             }, status=st.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -72,6 +79,7 @@ class CreateUserView(viewsets.ViewSet):
         except Exception as e:
             print("Exception:- {}".format(str(e)))
             return Response({
+                'status': 'fail',
                 'message': 'Something went wrong',
                 'response_object': []
             }, status=st.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -83,41 +91,42 @@ class UserLoginView(viewsets.ViewSet):
             username = request.data.get('username')
             password = request.data.get('password')
 
-            check_user_info = UserInfo.objects.filter(mobile=username).first() if username.isnumeric() else User.objects.filter(Q(email=username) | Q(username=username)).first()
+            check_user = User.objects.get(username=username)
 
-            if check_user_info is not None:
-                get_password = User.objects.filter(id=check_user_info.user_id).first() if username.isnumeric() else User.objects.filter(id=check_user_info.id).first()
-            else:
-                return Response({
-                    'message': 'Invalid username or password.',
-                    'response_object': []
-                }, status=st.HTTP_400_BAD_REQUEST)
+            if check_user:
+                check_password = check_user.password
+                get_password = CreateUserView.create_encrypt_password(check_password, is_update=True)
 
-            if get_password is not None:
-                get_decrypted_password = CreateUserView.create_encrypt_password(password)
-            else:
-                return Response({
-                    'message': 'Invalid username or password.',
-                    'response_object': []
-                }, status=st.HTTP_400_BAD_REQUEST)
+                if password == get_password:
+                    get_token = Token.objects.get(user_id=check_user.id)
+                    response_object = {
+                        'id': check_user.id,
+                        'username': username,
+                        'token': get_token.key
+                    }
+                    return Response({
+                        'status': 'success',
+                        'message': '',
+                        'response_object': response_object
+                    }, status=st.HTTP_200_OK)
+                else:
+                    return Response({
+                        'status': 'fail',
+                        'message': 'Invalid credentials',
+                        'response_object': []
+                    }, status=st.HTTP_400_BAD_REQUEST)
 
-            if check_user_info is not None and get_password.password.__contains__(get_decrypted_password):
-                print('yess')
-
-                return Response({
-                    'message': 'User created successfully.',
-                    'response_object': []
-                }, status=st.HTTP_400_BAD_REQUEST)
-            else:
-                return Response({
-                    'message': 'Invalid username or password.',
-                    'response_object': []
-                }, status=st.HTTP_400_BAD_REQUEST)
+        except User.DoesNotExist:
+            return Response({
+                'status': 'fail',
+                'message': 'No User exists.',
+                'response_object': []
+            }, status=st.HTTP_400_BAD_REQUEST)
 
         except Exception as e:
             print("Exception:- {}".format(str(e)))
             return Response({
+                'status': 'fail',
                 'message': 'Something went wrong',
                 'response_object': []
             }, status=st.HTTP_500_INTERNAL_SERVER_ERROR)
-

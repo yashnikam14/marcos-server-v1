@@ -5,6 +5,8 @@ from .reports import CustomerCls
 from rest_framework.response import Response
 from .models import StudentInfo
 from django.db.models import Q
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 # Create your views here.
 
 
@@ -44,12 +46,14 @@ class AddCustomerAPI(viewsets.ViewSet):
                     message = 'Customer already exists.'
                     status_code = st.HTTP_400_BAD_REQUEST
             return Response({
+                'status': 'success',
                 'message': message,
                 'response_object': []
             },  status=status_code)
 
         except StudentInfo.DoesNotExist:
             return Response({
+                'status': 'fail',
                 'message': 'No Student exists with given email/phone.',
                 'response_object': []
             }, status=st.HTTP_400_BAD_REQUEST)
@@ -57,17 +61,20 @@ class AddCustomerAPI(viewsets.ViewSet):
         except Exception as e:
             print("Exception:- {}".format(str(e)))
             return Response({
+                'status': 'fail',
                 'message': 'Something went wrong',
                 'response_object': []
             }, status=st.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class GetCustomerAPI(viewsets.ViewSet):
+    # authentication_classes = [TokenAuthentication]
+    # permission_classes = [IsAuthenticated]
     def create(self, request, *args, **kwargs):
         try:
             status_code = st.HTTP_200_OK
-            mobile = request.data.get('mobile')
-            customer_lst = CustomerCls.get_customer_list(mobile)
+            name = request.data.get('name')
+            customer_lst = CustomerCls.get_customer_list(name)
             response_object = [{
                 'name': customer.get('name'),
                 'class': customer.get('class'),
@@ -78,6 +85,7 @@ class GetCustomerAPI(viewsets.ViewSet):
                 'fees': customer.get('fees')
             }for customer in customer_lst]
             return Response({
+                'status': 'success',
                 'message': '',
                 'response_object': response_object
             },  status=status_code)
@@ -85,6 +93,7 @@ class GetCustomerAPI(viewsets.ViewSet):
         except Exception as e:
             print("Exception:- {}".format(str(e)))
             return Response({
+                'status': 'success',
                 'message': 'Something went wrong',
                 'response_object': []
             }, status=st.HTTP_500_INTERNAL_SERVER_ERROR)

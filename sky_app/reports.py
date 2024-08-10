@@ -55,12 +55,12 @@ class CustomerCls:
                 cur.close()
 
     @staticmethod
-    def get_customer_list(mobile):
+    def get_customer_list(name):
         cur = connection.cursor()
         try:
             query = """SELECT `name` AS `name`, get_class AS class, mobile AS mobile, 
                     f_name AS f_name, email AS email, section AS section, fees AS fees 
-                    FROM student_info {};""".format('WHERE mobile={}'.format(mobile) if len(mobile) > 0 else '')
+                    FROM student_info {};""".format('WHERE `name` LIKE "%{}%"'.format(name) if len(name) > 0 else '')
 
             cur.execute(query)
             customer_lst = cur.fetchall()
