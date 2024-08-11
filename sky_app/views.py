@@ -1,18 +1,18 @@
-from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework import status as st
 from .reports import CustomerCls
 from rest_framework.response import Response
 from .models import StudentInfo
 from django.db.models import Q
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
+from marcos_server.utils.loggers import log_message
+from marcos_server.sky_an_app.response_handler import api_response
 # Create your views here.
 
 
 class AddCustomerAPI(viewsets.ViewSet):
     def create(self, request, *args, **kwargs):
         try:
+            log_message({"function": "AddCustomerAPI", "Started": True})
             name = request.data.get('fullname')
             get_class = request.data.get('class')
             mobile = request.data.get('mobile')
@@ -45,26 +45,16 @@ class AddCustomerAPI(viewsets.ViewSet):
                 else:
                     message = 'Customer already exists.'
                     status_code = st.HTTP_400_BAD_REQUEST
-            return Response({
-                'status': 'success',
-                'message': message,
-                'response_object': []
-            },  status=status_code)
+            log_message({"function": "AddCustomerAPI", "Completed": True})
+
+            return api_response('success', '', [], status_code)
 
         except StudentInfo.DoesNotExist:
-            return Response({
-                'status': 'fail',
-                'message': 'No Student exists with given email/phone.',
-                'response_object': []
-            }, status=st.HTTP_400_BAD_REQUEST)
+            return api_response('fail', 'No Student exists with given email/phone.', [], st.HTTP_400_BAD_REQUEST)
 
         except Exception as e:
-            print("Exception:- {}".format(str(e)))
-            return Response({
-                'status': 'fail',
-                'message': 'Something went wrong',
-                'response_object': []
-            }, status=st.HTTP_500_INTERNAL_SERVER_ERROR)
+            api_response('fail', 'Something went wrong. Error: {}'.format(str(e)), [], st.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 
 class GetCustomerAPI(viewsets.ViewSet):
@@ -72,6 +62,7 @@ class GetCustomerAPI(viewsets.ViewSet):
     # permission_classes = [IsAuthenticated]
     def create(self, request, *args, **kwargs):
         try:
+            log_message({"function": "GetCustomerAPI", "Started": True})
             status_code = st.HTTP_200_OK
             name = request.data.get('name')
             customer_lst = CustomerCls.get_customer_list(name)
@@ -84,17 +75,12 @@ class GetCustomerAPI(viewsets.ViewSet):
                 'section': customer.get('section'),
                 'fees': customer.get('fees')
             }for customer in customer_lst]
-            return Response({
-                'status': 'success',
-                'message': '',
-                'response_object': response_object
-            },  status=status_code)
+            log_message({"function": "GetCustomerAPI", "Completed": True})
+
+            return api_response('success', '', [], status_code)
 
         except Exception as e:
-            print("Exception:- {}".format(str(e)))
-            return Response({
-                'status': 'success',
-                'message': 'Something went wrong',
-                'response_object': []
-            }, status=st.HTTP_500_INTERNAL_SERVER_ERROR)
+            api_response('fail', 'Something went wrong. Error: {}'.format(str(e)), [],
+                         st.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
