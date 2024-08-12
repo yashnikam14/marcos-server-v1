@@ -1,7 +1,6 @@
 from rest_framework import viewsets
 from rest_framework import status as st
 from .reports import CustomerCls
-from rest_framework.response import Response
 from .models import StudentInfo
 from django.db.models import Q
 from marcos_server.utils.loggers import log_message

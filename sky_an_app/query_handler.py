@@ -1,7 +1,4 @@
 from django.db import connection
-from rest_framework import status as st
-from rest_framework.response import Response
-from datetime import datetime
 from marcos_server.utils.loggers import log_message
 
 def execute_query(query):

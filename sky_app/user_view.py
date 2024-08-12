@@ -1,7 +1,5 @@
 from rest_framework import viewsets
 from rest_framework import status as st
-from rest_framework.response import Response
-from django.db.models import Q
 from cryptography.fernet import Fernet
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
