@@ -78,23 +78,23 @@ WSGI_APPLICATION = 'sky_an_app.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.mysql',
-    #     'NAME': 'sky_db',
-    #     'USER': 'root',
-    #     'PASSWORD': 'yash',
-    #     'HOST': 'localhost',
-    #     'PORT': '3306',
-    # }
-
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': database_settings.get('NAME'),
-        'USER': database_settings.get('USER'),
-        'PASSWORD': database_settings.get('PASSWORD'),
-        'HOST': database_settings.get('HOST'),
-        'PORT': database_settings.get('PORT'),
+        'NAME': 'sql12726080',
+        'USER': 'sql12726080',
+        'PASSWORD': 'SPZX1M6Cdi',
+        'HOST': 'sql12.freesqldatabase.com',
+        'PORT': '3306',
     }
+
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': database_settings.get('NAME'),
+    #     'USER': database_settings.get('USER'),
+    #     'PASSWORD': database_settings.get('PASSWORD'),
+    #     'HOST': database_settings.get('HOST'),
+    #     'PORT': database_settings.get('PORT'),
+    # }
 }
 
 
