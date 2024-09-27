@@ -1,5 +1,5 @@
 from django.db import connection
-from marcos_server.utils.loggers import log_message
+from utils.loggers import log_message
 
 def execute_query(query):
     cur = connection.cursor()

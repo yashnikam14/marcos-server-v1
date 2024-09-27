@@ -3,8 +3,8 @@ from rest_framework import status as st
 from .reports import CustomerCls
 from .models import StudentInfo
 from django.db.models import Q
-from marcos_server.utils.loggers import log_message
-from marcos_server.sky_an_app.response_handler import api_response
+from utils.loggers import log_message
+from sky_an_app.response_handler import api_response
 # Create your views here.
 
 

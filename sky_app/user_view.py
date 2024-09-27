@@ -3,9 +3,9 @@ from rest_framework import status as st
 from cryptography.fernet import Fernet
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
-from .reports import UserCls
-from marcos_server.sky_an_app.response_handler import api_response
-from marcos_server.utils.loggers import log_message
+from sky_app.reports import UserCls
+from sky_an_app.response_handler import api_response
+from utils.loggers import log_message
 class CreateUserView(viewsets.ViewSet):
     def create(self, request, *args, **kwargs):
         try:

@@ -78,23 +78,23 @@ WSGI_APPLICATION = 'sky_an_app.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'sql12726080',
-        'USER': 'sql12726080',
-        'PASSWORD': 'SPZX1M6Cdi',
-        'HOST': 'sql12.freesqldatabase.com',
-        'PORT': '3306',
-    }
-
     # 'default': {
     #     'ENGINE': 'django.db.backends.mysql',
-    #     'NAME': database_settings.get('NAME'),
-    #     'USER': database_settings.get('USER'),
-    #     'PASSWORD': database_settings.get('PASSWORD'),
-    #     'HOST': database_settings.get('HOST'),
-    #     'PORT': database_settings.get('PORT'),
+    #     'NAME': 'sql12726080',
+    #     'USER': 'sql12726080',
+    #     'PASSWORD': 'SPZX1M6Cdi',
+    #     'HOST': 'sql12.freesqldatabase.com',
+    #     'PORT': '3306',
     # }
+
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': database_settings.get('NAME'),
+        'USER': database_settings.get('USER'),
+        'PASSWORD': database_settings.get('PASSWORD'),
+        'HOST': database_settings.get('HOST'),
+        'PORT': database_settings.get('PORT'),
+    }
 }
 
 
@@ -132,7 +132,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

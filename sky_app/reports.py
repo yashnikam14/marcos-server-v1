@@ -1,7 +1,7 @@
 from rest_framework import status as st
 from rest_framework.response import Response
 from datetime import datetime
-from marcos_server.sky_an_app.query_handler import execute_query, insert_query
+from sky_an_app.query_handler import execute_query, insert_query
 
 class CustomerCls:
     @staticmethod
